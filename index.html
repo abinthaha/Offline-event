@@ -1,0 +1,212 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/materialize.css">
+    <link rel="stylesheet" href="css/materialize.min.css">
+    <meta charset=utf-8>
+    <meta name="viewport" content="width=620">
+    <link rel="stylesheet" href="css/html5demos.css">
+    <script src="js/h5utils.js"></script>
+    <title>
+      To Do List
+    </title>
+    <script type="text/javascript">
+      // Your Client ID can be retrieved from your project in the Google
+      // Developer Console, https://console.developers.google.com
+      var CLIENT_ID = '408627214547-pb3g0bh55rb05a8jtaqrd5vcgscssdj3.apps.googleusercontent.com';
+
+      var SCOPES = ["https://www.googleapis.com/auth/calendar"];
+
+      /**
+       * Check if current user has authorized this application.
+       */
+      function checkAuth() {
+        gapi.auth.authorize(
+          {
+            'client_id': CLIENT_ID,
+            'scope': SCOPES,
+            'immediate': true
+          }, handleAuthResult);
+      }
+
+      /**
+       * Handle response from authorization server.
+       *
+       * @param {Object} authResult Authorization result.
+       */
+      function handleAuthResult(authResult) {
+        var authorizeDiv = document.getElementById('authorize-div');
+        if (authResult && !authResult.error) {
+          // Hide auth UI, then load client library.
+          authorizeDiv.style.display = 'none';
+          loadCalendarApi();
+        } else {
+          // Show auth UI, allowing the user to initiate authorization by
+          // clicking authorize button.
+          authorizeDiv.style.display = 'inline';
+        }
+      }
+
+      /**
+       * Initiate auth flow in response to user clicking authorize button.
+       *
+       * @param {Event} event Button click event.
+       */
+      function handleAuthClick(event) {
+        gapi.auth.authorize(
+          {client_id: CLIENT_ID, scope: SCOPES, immediate: false},
+          handleAuthResult);
+        return false;
+      }
+
+      /**
+       * Load Google Calendar client library. List upcoming events
+       * once client library is loaded.
+       */
+      function loadCalendarApi() {
+        gapi.client.load('calendar', 'v3');
+      }
+      function addEv()
+      {
+        // Refer to the JavaScript quickstart on how to setup the environment:
+        // https://developers.google.com/google-apps/calendar/quickstart/js
+        // Change the scope to 'https://www.googleapis.com/auth/calendar' and delete any
+        // stored credentials.
+
+        var event = {
+          'summary': 'Google I/O 2015',
+          'description': 'A chance to hear more about Google\'s developer products.',
+            
+          'start': {
+            'dateTime': '2015-08-28T09:00:00-07:00',
+            'timeZone': 'America/Los_Angeles'
+          },
+          'end': {
+            'dateTime': '2015-08-28T17:00:00-07:00',
+            'timeZone': 'America/Los_Angeles'
+          }
+        };
+
+        var request = gapi.client.calendar.events.insert({
+          'calendarId': 'primary',
+          'resource': event
+        });
+
+        request.execute(function(event) {
+            alert("Event");
+            appendPre('Event created: ' + event.htmlLink);
+        });
+        
+      }
+        
+    function check()
+        {
+            var summ=document.getElementById("summery").value;
+            var desc=document.getElementById("description").value;
+            var sDate=document.getElementById("startDate").value;
+            var eDate=document.getElementById("endDate").value;
+        }   
+    </script>
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <script src="https://apis.google.com/js/client.js?onload=checkAuth">
+    </script>
+	<meta name="google-signin-client_id" content="408627214547-pb3g0bh55rb05a8jtaqrd5vcgscssdj3.apps.googleusercontent.com">
+
+  </head>
+  <body>
+    <div id="authorize-div" style="display: none">
+      <span>Authorize access to Google Calendar API</span>
+      <!--Button for the user to click to initiate auth sequence -->
+      <button id="authorize-button" onclick="handleAuthClick(event)">
+        Authorize
+      </button>
+    </div>
+	<iframe src="https://www.google.com/calendar/embed?src=abin%40qburst.com&ctz=Asia/Calcutta" style="border: 0" width="800" height="500" frameborder="0" scrolling="no">
+      </iframe>
+      <form onsubmit="doesConnection()" id="addEvent">
+          <table style="width: 800px;">
+            <tr>
+                <td>
+                    Summery
+                </td>
+                <td>
+                    <input type="text" placeholder="Summery" id="summery" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Description
+                </td>
+                <td>
+                    <input type="text" placeholder="Enter a small description" height="300px" id="description" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Start Date and Time
+                </td>
+                <td>
+                    <input type="datetime-local" id="startDate" value="2015-08-01T12:00:00" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    End Date and Time
+                </td>
+                <td>
+                    <input type="datetime-local" id="endDate" value="2015-08-01T00:00:00" required>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><input type="submit" class="btn" value="Insert"></td>
+            </tr>
+          </table>
+      </form>
+            <section id="wrapper">
+            <article>
+                <span id="status">
+
+                </span>
+                <ol id="state"></ol>
+            </article>
+            <script>
+                var statusElem  = document.getElementById('status'),
+                        state = document.getElementById('state');
+
+                function online(event) 
+                {
+                    statusElem.className = navigator.onLine ? 'online' : 'offline';
+                    //statusElem.innerHTML = navigator.onLine ? 'online' : 'offline';
+                    //state.innerHTML += '<li>New event: ' + event.type + '</li>';
+                    console.log(event.type);
+                    var x = "online";
+                    if(event.type.localeCompare(x))
+                    {
+                        alert('Online');
+                    }
+                    else
+                    {
+                        alert('Offline');
+                    }                   
+                }   
+                addEvent(window, 'online', online);
+                addEvent(window, 'offline', online);
+                online({ type: 'ready' });
+            </script>
+            </section>
+            <script src="js/prettify.packed.js"></script>
+            <script>
+                var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+                document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+            </script>
+            <script>
+                try 
+                {
+                    var pageTracker = _gat._getTracker("UA-1656750-18");
+                    pageTracker._trackPageview();
+                } 
+                catch(err) {}
+            </script>
+  </body>
+</html>
