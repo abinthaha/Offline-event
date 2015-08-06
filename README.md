@@ -1,4 +1,4 @@
-# Offline Event Storage
+# Google Calender Offline
 
 Offline event storage is a web based application that works basically with Google Calendar API and HTML5 LocalStorage API.
 

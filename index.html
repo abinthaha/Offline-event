@@ -234,11 +234,12 @@
                     //alert(event.type);
 
                     var x = "offline";                    
+                    var y = "online";
                     if(event.type.localeCompare(x) === 0)
                     {   
                         alert('You are currently offline. The data will be added to the Google calender when you are online');
                     }
-                    else
+                    else if(event.type.localeCompare(y) === 0)
                     {                     
                         alert("Your data is saving !");
                         addEv();                        
