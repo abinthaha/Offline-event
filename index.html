@@ -3,6 +3,8 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/materialize.css">
     <link rel="stylesheet" href="css/materialize.min.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
     <meta charset=utf-8>
     <meta name="viewport" content="width=620">
     <link rel="stylesheet" href="css/html5demos.css">
@@ -68,44 +70,76 @@
       }
       function addEv()
       {
-        // Refer to the JavaScript quickstart on how to setup the environment:
-        // https://developers.google.com/google-apps/calendar/quickstart/js
-        // Change the scope to 'https://www.googleapis.com/auth/calendar' and delete any
-        // stored credentials.
+          if(localStorage.getItem('summe') === null)
+          {
+              alert('Data not exists');
+              var event = 
+                {
+                    'summary': 'summer',
+                    'location': '800 Howard St., San Francisco, CA 94103',
+                    'description': 'A chance to hear more about Google\'s developer products.',
 
-        var event = {
-          'summary': 'Google I/O 2015',
-          'description': 'A chance to hear more about Google\'s developer products.',
-            
-          'start': {
-            'dateTime': '2015-08-28T09:00:00-07:00',
-            'timeZone': 'America/Los_Angeles'
-          },
-          'end': {
-            'dateTime': '2015-08-28T17:00:00-07:00',
-            'timeZone': 'America/Los_Angeles'
+                    'start': 
+                    {
+                        'dateTime': '2015-08-18T09:00:00-07:00',
+                        'timeZone': 'America/Los_Angeles'
+                    },
+                    'end': 
+                    {
+                        'dateTime': '2015-08-18T17:00:00-07:00',
+                        'timeZone': 'America/Los_Angeles'
+                    },
+                    'recurrence': 
+                    [
+                        'RRULE:FREQ=DAILY;COUNT=2'
+                    ],
+                    'attendees': 
+                    [
+                        {'email': 'lpage@example.com'},
+                        {'email': 'sbrin@example.com'}
+                    ],
+                    'reminders': 
+                    {
+                        'useDefault': false,
+                        'overrides': 
+                        [
+                              {'method': 'email', 'minutes': 24 * 60},
+                              {'method': 'popup', 'minutes': 10}
+                        ]
+                    }
+                };
+                var request = gapi.client.calendar.events.insert(
+                {
+                    'calendarId': 'primary',
+                    'resource': event
+                });
+
+                request.execute(function(event) 
+                {
+                    alert("Event added");
+                });
           }
-        };
-
-        var request = gapi.client.calendar.events.insert({
-          'calendarId': 'primary',
-          'resource': event
-        });
-
-        request.execute(function(event) {
-            alert("Event");
-            appendPre('Event created: ' + event.htmlLink);
-        });
-        
+          else
+          {
+              alert('Data exists, so clearing   ');
+              localStorage.clear();
+          }
+                   
       }
-        
-    function check()
+        function saveData()
         {
             var summ=document.getElementById("summery").value;
+            var locat=document.getElementById("location").value;
             var desc=document.getElementById("description").value;
             var sDate=document.getElementById("startDate").value;
             var eDate=document.getElementById("endDate").value;
-        }   
+            
+            localStorage.setItem('summe', summ);
+            localStorage.setItem('descript', desc);
+            localStorage.setItem('locat', locat);
+            localStorage.setItem('sDate', sDate);
+            localStorage.setItem('eDate', eDate);
+        }
     </script>
 	<script src="https://apis.google.com/js/platform.js" async defer></script>
 
@@ -122,48 +156,63 @@
         Authorize
       </button>
     </div>
-	<iframe src="https://www.google.com/calendar/embed?src=abin%40qburst.com&ctz=Asia/Calcutta" style="border: 0" width="800" height="500" frameborder="0" scrolling="no">
-      </iframe>
-      <form onsubmit="doesConnection()" id="addEvent">
-          <table style="width: 800px;">
-            <tr>
-                <td>
-                    Summery
-                </td>
-                <td>
-                    <input type="text" placeholder="Summery" id="summery" required>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Description
-                </td>
-                <td>
-                    <input type="text" placeholder="Enter a small description" height="300px" id="description" required>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Start Date and Time
-                </td>
-                <td>
-                    <input type="datetime-local" id="startDate" value="2015-08-01T12:00:00" required>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    End Date and Time
-                </td>
-                <td>
-                    <input type="datetime-local" id="endDate" value="2015-08-01T00:00:00" required>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" align="center"><input type="submit" class="btn" value="Insert"></td>
-            </tr>
-          </table>
-      </form>
-            <section id="wrapper">
+      <div class="row">
+        <div class="col-md-6" style="left:25px;">
+            <iframe src="https://www.google.com/calendar/embed?src=abin%40qburst.com&ctz=Asia/Calcutta" style="border: 0" width="800" height="500" frameborder="0" scrolling="no">
+            </iframe>     
+        </div>
+          <div class="com-md-6" style="left:45px;">
+            <form onsubmit="saveData()" id="addEvent">
+              <table style="width: 800px; margin-left: 45px; border: 1px solid black">
+                <tr>
+                    <td>
+                        Summery
+                    </td>
+                    <td>
+                        <input type="text" placeholder="Summery" id="summery" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Description
+                    </td>
+                    <td>
+                        <input type="text" placeholder="Enter a small description" height="300px" id="description" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Location
+                    </td>
+                    <td>
+                        <input type="text" placeholder="Location" height="300px" id="location" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Start Date and Time
+                    </td>
+                    <td>
+                        <input type="datetime-local" id="startDate" value="2015-08-01T12:00:00" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        End Date and Time
+                    </td>
+                    <td>
+                        <input type="datetime-local" id="endDate" value="2015-08-01T00:00:00" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center"><input type="submit" class="btn" value="Insert"></td>
+                </tr>
+              </table>
+          </form>
+          </div>
+      </div>
+      
+        <section id="wrapper">
             <article>
                 <span id="status">
 
@@ -180,15 +229,18 @@
                     //statusElem.innerHTML = navigator.onLine ? 'online' : 'offline';
                     //state.innerHTML += '<li>New event: ' + event.type + '</li>';
                     console.log(event.type);
-                    var x = "online";
-                    if(event.type.localeCompare(x))
-                    {
-                        alert('Online');
+                    //alert(event.type);
+
+                    var x = "offline";                    
+                    if(event.type.localeCompare(x) === 0)
+                    {   
+                        alert('You are currently offline. The data will be added to the Google calender when you are online');
                     }
                     else
-                    {
-                        alert('Offline');
-                    }                   
+                    {                     
+                        alert("Your data is saving !");
+                        addEv();                        
+                    }
                 }   
                 addEvent(window, 'online', online);
                 addEvent(window, 'offline', online);
