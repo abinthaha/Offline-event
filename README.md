@@ -7,9 +7,6 @@ We know the advantages of Google Calendar. It helps us to scribble down anything
 
 > The main thought behind this application was to store the event locally on Local Storage of borwser using HTML5 LocalStorage API. So that even when the network went down, our event will be saved locally and it will be added to the Google Calendar at the time when the network came up without any complexities.
 
-
-This text you see here is *actually* written in Markdown! To get a feel for Markdown's syntax, type some text into the left window and watch the results in the right.
-
 ### Tech
 
 The application uses a number of open source projects to work properly:
